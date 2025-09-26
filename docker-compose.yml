@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  user-api:
+    build: ./api1
+    container_name: user-api-container
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=userapi.settings
+    volumes:
+      - ./api1:/app
+    networks:
+      - api-network
+
+  product-api:
+    build: ./api2
+    container_name: product-api-container
+    ports:
+      - "8001:8001"
+    environment:
+      - DJANGO_SETTINGS_MODULE=productapi.settings
+    volumes:
+      - ./api2:/app
+    networks:
+      - api-network
+
+  order-api:
+    build: ./api3
+    container_name: order-api-container
+    ports:
+      - "8002:8002"
+    environment:
+      - DJANGO_SETTINGS_MODULE=orderapi.settings
+    volumes:
+      - ./api3:/app
+    networks:
+      - api-network
+
+  payment-api:
+    build: ./api4
+    container_name: payment-api-container
+    ports:
+      - "8003:8003"
+    environment:
+      - DJANGO_SETTINGS_MODULE=paymentapi.settings
+    volumes:
+      - ./api4:/app
+    networks:
+      - api-network
+
+networks:
+  api-network:
+    driver: bridge
