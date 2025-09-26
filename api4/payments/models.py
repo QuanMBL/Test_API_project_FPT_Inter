@@ -1,6 +1,7 @@
-from django.db import models
+from mongoengine import Document, StringField, DecimalField, DateTimeField
+from datetime import datetime
 
-class Payment(models.Model):
+class Payment(Document):
     PAYMENT_METHOD_CHOICES = [
         ('credit_card', 'Credit Card'),
         ('debit_card', 'Debit Card'),
@@ -15,13 +16,18 @@ class Payment(models.Model):
         ('refunded', 'Refunded'),
     ]
     
-    payment_id = models.CharField(max_length=100, unique=True)
-    order_id = models.CharField(max_length=100)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-    transaction_id = models.CharField(max_length=100, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    payment_id = StringField(max_length=100, required=True, unique=True)
+    order_id = StringField(max_length=100, required=True)
+    amount = DecimalField(precision=2, required=True)
+    payment_method = StringField(max_length=20, choices=PAYMENT_METHOD_CHOICES, required=True)
+    status = StringField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    transaction_id = StringField(max_length=100)
+    created_at = DateTimeField(default=datetime.utcnow)
+    
+    meta = {
+        'collection': 'payments',
+        'indexes': ['payment_id', 'order_id', 'status', 'payment_method', 'created_at']
+    }
     
     def __str__(self):
         return f"Payment {self.payment_id}"

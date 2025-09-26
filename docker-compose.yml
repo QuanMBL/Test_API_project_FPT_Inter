@@ -12,6 +12,8 @@ services:
       - ./api1:/app
     networks:
       - api-network
+    depends_on:
+      - mongodb
 
   product-api:
     build: ./api2
@@ -24,6 +26,8 @@ services:
       - ./api2:/app
     networks:
       - api-network
+    depends_on:
+      - mongodb
 
   order-api:
     build: ./api3
@@ -36,6 +40,8 @@ services:
       - ./api3:/app
     networks:
       - api-network
+    depends_on:
+      - mongodb
 
   payment-api:
     build: ./api4
@@ -48,6 +54,61 @@ services:
       - ./api4:/app
     networks:
       - api-network
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb-container
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password123
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - api-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus-container
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - api-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana-container
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+    networks:
+      - api-network
+    depends_on:
+      - prometheus
+
+volumes:
+  mongodb_data:
+  prometheus_data:
+  grafana_data:
 
 networks:
   api-network:

@@ -1,9 +1,15 @@
-from django.db import models
+from mongoengine import Document, StringField, EmailField, DateTimeField
+from datetime import datetime
 
-class User(models.Model):
-    name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+class User(Document):
+    name = StringField(max_length=100, required=True)
+    email = EmailField(required=True, unique=True)
+    created_at = DateTimeField(default=datetime.utcnow)
+    
+    meta = {
+        'collection': 'users',
+        'indexes': ['email', 'created_at']
+    }
     
     def __str__(self):
         return self.name

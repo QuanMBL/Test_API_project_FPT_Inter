@@ -3,6 +3,7 @@ Django settings for paymentapi project.
 """
 
 from pathlib import Path
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,10 +22,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'django_prometheus',
     'payments',
 ]
 
 MIDDLEWARE = [
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -33,6 +36,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
 ROOT_URLCONF = 'paymentapi.urls'
@@ -55,6 +59,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'paymentapi.wsgi.application'
 
+# MongoDB configuration using mongoengine
+import mongoengine
+mongoengine.connect(
+    db='paymentapi_db',
+    host=f"mongodb://admin:password123@{os.getenv('MONGODB_HOST', 'mongodb')}:{os.getenv('MONGODB_PORT', '27017')}/"
+)
+
+# Keep Django's default database for admin and auth
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
