@@ -1,0 +1,712 @@
+{
+  "id": null,
+  "title": "all_4api_1_v3 - Dashboard tổng quan 4 API Services (Enhanced)",
+  "tags": [
+    "api",
+    "monitoring", 
+    "4-services",
+    "enhanced",
+    "tables",
+    "stable"
+  ],
+  "style": "dark",
+  "timezone": "browser",
+  "refresh": "10s",
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "uid": "all_4api_1_v3_enhanced",
+  "panels": [
+    {
+      "id": 1,
+      "title": "📊 Tổng số Services đang hoạt động",
+      "type": "stat",
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "sum(up{job=~\"user-api|product-api|order-api|payment-api\"})",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red", 
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      }
+    },
+    {
+      "id": 2,
+      "title": "🖥️ CPU Usage trung bình",
+      "type": "stat",
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "avg(rate(process_cpu_seconds_total{job=~\"user-api|product-api|order-api|payment-api\"}[5m]) * 100)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 85
+              }
+            ]
+          },
+          "unit": "percent"
+        }
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      }
+    },
+    {
+      "id": 3,
+      "title": "💾 Tổng Memory Usage",
+      "type": "stat",
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 12,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "sum(process_resident_memory_bytes{job=~\"user-api|product-api|order-api|payment-api\"})",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 100000000
+              },
+              {
+                "color": "red",
+                "value": 200000000
+              }
+            ]
+          },
+          "unit": "bytes"
+        }
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      }
+    },
+    {
+      "id": 4,
+      "title": "⚠️ Tỷ lệ lỗi trung bình",
+      "type": "stat",
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 18,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(django_http_requests_total{job=~\"user-api|product-api|order-api|payment-api\",status=~\"4..|5..\"}[5m])) / sum(rate(django_http_requests_total{job=~\"user-api|product-api|order-api|payment-api\"}[5m])) * 100",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 5
+              },
+              {
+                "color": "red",
+                "value": 10
+              }
+            ]
+          },
+          "unit": "percent"
+        }
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      }
+    },
+    {
+      "id": 5,
+      "title": "📋 Bảng thông tin Services",
+      "type": "table",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 6
+      },
+      "targets": [
+        {
+          "expr": "up{job=~\"user-api|product-api|order-api|payment-api\"}",
+          "refId": "A",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "rate(process_cpu_seconds_total{job=~\"user-api|product-api|order-api|payment-api\"}[5m]) * 100",
+          "refId": "B",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "process_resident_memory_bytes{job=~\"user-api|product-api|order-api|payment-api\"}",
+          "refId": "C",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "rate(django_http_requests_total{job=~\"user-api|product-api|order-api|payment-api\"}[5m])",
+          "refId": "D",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "gradient-gauge"
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "job"
+          }
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "title": "📊 Bảng CPU Usage theo Service",
+      "type": "table",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 6
+      },
+      "targets": [
+        {
+          "expr": "rate(process_cpu_seconds_total{job=\"user-api\"}[5m]) * 100",
+          "refId": "A",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "rate(process_cpu_seconds_total{job=\"product-api\"}[5m]) * 100",
+          "refId": "B",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "rate(process_cpu_seconds_total{job=\"order-api\"}[5m]) * 100",
+          "refId": "C",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "rate(process_cpu_seconds_total{job=\"payment-api\"}[5m]) * 100",
+          "refId": "D",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          },
+          "unit": "percent"
+        }
+      },
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Value"
+          }
+        ]
+      }
+    },
+    {
+      "id": 7,
+      "title": "💾 Bảng Memory Usage theo Service",
+      "type": "table",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 14
+      },
+      "targets": [
+        {
+          "expr": "process_resident_memory_bytes{job=\"user-api\"}",
+          "refId": "A",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "process_resident_memory_bytes{job=\"product-api\"}",
+          "refId": "B",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "process_resident_memory_bytes{job=\"order-api\"}",
+          "refId": "C",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "process_resident_memory_bytes{job=\"payment-api\"}",
+          "refId": "D",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          },
+          "unit": "bytes"
+        }
+      },
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Value"
+          }
+        ]
+      }
+    },
+    {
+      "id": 8,
+      "title": "🚀 Bảng Request Rate theo Service",
+      "type": "table",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 14
+      },
+      "targets": [
+        {
+          "expr": "rate(django_http_requests_total{job=\"user-api\"}[5m])",
+          "refId": "A",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "rate(django_http_requests_total{job=\"product-api\"}[5m])",
+          "refId": "B",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "rate(django_http_requests_total{job=\"order-api\"}[5m])",
+          "refId": "C",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "rate(django_http_requests_total{job=\"payment-api\"}[5m])",
+          "refId": "D",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          },
+          "unit": "reqps"
+        }
+      },
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Value"
+          }
+        ]
+      }
+    },
+    {
+      "id": 9,
+      "title": "📈 CPU Usage theo từng Service (Time Series)",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 22
+      },
+      "targets": [
+        {
+          "expr": "rate(process_cpu_seconds_total{job=\"user-api\"}[5m]) * 100",
+          "refId": "A",
+          "legendFormat": "User API"
+        },
+        {
+          "expr": "rate(process_cpu_seconds_total{job=\"product-api\"}[5m]) * 100",
+          "refId": "B",
+          "legendFormat": "Product API"
+        },
+        {
+          "expr": "rate(process_cpu_seconds_total{job=\"order-api\"}[5m]) * 100",
+          "refId": "C",
+          "legendFormat": "Order API"
+        },
+        {
+          "expr": "rate(process_cpu_seconds_total{job=\"payment-api\"}[5m]) * 100",
+          "refId": "D",
+          "legendFormat": "Payment API"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 85
+              }
+            ]
+          },
+          "unit": "percent"
+        }
+      },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      }
+    },
+    {
+      "id": 10,
+      "title": "💾 Memory Usage theo từng Service (Time Series)",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 22
+      },
+      "targets": [
+        {
+          "expr": "process_resident_memory_bytes{job=\"user-api\"}",
+          "refId": "A",
+          "legendFormat": "User API"
+        },
+        {
+          "expr": "process_resident_memory_bytes{job=\"product-api\"}",
+          "refId": "B",
+          "legendFormat": "Product API"
+        },
+        {
+          "expr": "process_resident_memory_bytes{job=\"order-api\"}",
+          "refId": "C",
+          "legendFormat": "Order API"
+        },
+        {
+          "expr": "process_resident_memory_bytes{job=\"payment-api\"}",
+          "refId": "D",
+          "legendFormat": "Payment API"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 100000000
+              },
+              {
+                "color": "red",
+                "value": 200000000
+              }
+            ]
+          },
+          "unit": "bytes"
+        }
+      },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      }
+    },
+    {
+      "id": 11,
+      "title": "📊 Bảng HTTP Status Codes",
+      "type": "table",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 30
+      },
+      "targets": [
+        {
+          "expr": "sum by (job, status) (django_http_requests_total{job=~\"user-api|product-api|order-api|payment-api\"})",
+          "refId": "A",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          }
+        }
+      },
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Value"
+          }
+        ]
+      }
+    },
+    {
+      "id": 12,
+      "title": "⏱️ Bảng Response Time trung bình",
+      "type": "table",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 30
+      },
+      "targets": [
+        {
+          "expr": "avg(django_http_request_duration_seconds_sum{job=\"user-api\"} / django_http_request_duration_seconds_count{job=\"user-api\"})",
+          "refId": "A",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "avg(django_http_request_duration_seconds_sum{job=\"product-api\"} / django_http_request_duration_seconds_count{job=\"product-api\"})",
+          "refId": "B",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "avg(django_http_request_duration_seconds_sum{job=\"order-api\"} / django_http_request_duration_seconds_count{job=\"order-api\"})",
+          "refId": "C",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "avg(django_http_request_duration_seconds_sum{job=\"payment-api\"} / django_http_request_duration_seconds_count{job=\"payment-api\"})",
+          "refId": "D",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          },
+          "unit": "s"
+        }
+      },
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Value"
+          }
+        ]
+      }
+    }
+  ],
+  "templating": {
+    "list": []
+  },
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  }
+}

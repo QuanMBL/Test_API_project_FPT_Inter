@@ -9,5 +9,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/users/', include('users.urls')),
     path('metrics', metrics_view, name='metrics'),
-    path('', include('users.urls')),
+    
 ]

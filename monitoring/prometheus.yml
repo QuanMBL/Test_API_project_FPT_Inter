@@ -1,6 +1,6 @@
 global:
-  scrape_interval: 15s
-  evaluation_interval: 15s
+  scrape_interval: 30s
+  evaluation_interval: 30s
 
 rule_files:
   # - "first_rules.yml"
@@ -15,25 +15,25 @@ scrape_configs:
     static_configs:
       - targets: ['user-api-container:8000']
     metrics_path: '/metrics'
-    scrape_interval: 10s
+    scrape_interval: 30s
 
   - job_name: 'product-api'
     static_configs:
       - targets: ['product-api-container:8001']
     metrics_path: '/metrics'
-    scrape_interval: 10s
+    scrape_interval: 30s
 
   - job_name: 'order-api'
     static_configs:
       - targets: ['order-api-container:8002']
     metrics_path: '/metrics'
-    scrape_interval: 10s
+    scrape_interval: 30s
 
   - job_name: 'payment-api'
     static_configs:
       - targets: ['payment-api-container:8003']
     metrics_path: '/metrics'
-    scrape_interval: 10s
+    scrape_interval: 30s
 
   - job_name: 'mongodb'
     static_configs:
