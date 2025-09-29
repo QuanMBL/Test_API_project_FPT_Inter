@@ -36,6 +36,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'orders.middleware.MetricsMiddleware',  # Add our custom metrics middleware
     'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
